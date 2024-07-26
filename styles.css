@@ -1,0 +1,18 @@
+body {
+  background-color: red;
+}
+input {
+  display: block;
+  width: 100%;
+  line-height: 1.5;
+  padding: 8px 10px;
+  height: 50px;
+  background-color: transparent;
+  border: 1px solid rgb(51, 255, 0);
+  border-radius: 2px;
+  transition: all 0.2s ease-in-out;
+  font-family: Karbon !important;
+  font-size: 16px;
+  letter-spacing: 0.8px;
+  font-weight: normal;
+}
