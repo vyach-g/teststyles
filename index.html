@@ -1,0 +1,184 @@
+<html>
+
+<head>
+  <title>Nexi playground</title>
+
+</head>
+
+<body>
+  <img src="test_cards.png" />
+  <div id="form">
+  </div>
+  <input id="confirm" type="button" onClick="confirm()" value="Confirm" />
+
+
+  <script>
+    // (function () {
+    //   const originalPostMessage = window.postMessage;
+    //   window.postMessage = function (message, targetOrigin, transfer) {
+    //     console.log('Sending message from main page:', message);
+    //     originalPostMessage.call(this, message, targetOrigin, transfer);
+    //   };
+    // })();
+
+    // window.addEventListener('message', (e) => console.log('Получаемое сообщение:', e))</script>
+
+
+
+  <script type="text/javascript" src="https://xpaysandbox.nexigroup.com/monetaweb/resources/hfsdk.js"></script>
+  <!-- <script type="text/javascript" src="/hfsdk.js"></script> -->
+  <script type="text/javascript">
+    let build;
+    build = new Build({
+      onBuildSuccess: function (evtData) {
+        console.debug('onBuildSuccess: %s', JSON.stringify(evtData))
+        enableBtn();
+      },
+
+      onBuildError: function (evtData) {
+        console.error('onBuildError: %s', JSON.stringify(evtData))
+        enableBtn();
+        // write the code to manage the wrong data entered in the specified field: evtData.id
+        // the action can be finely tuned based on the provided error code available at evtData.errorCode
+        // the possible cases are:
+        // HF0001 - generic build field error
+        // HF0002 - temporary unavailability of the service
+        // HF0003 - session expired – the payment experience shall be restarted from the post orders/build
+        // HF0004 - card validation error – the luhn key check on the card number was failed
+        // HF0005 - brand not found – the card brand is not in the list of supported brands
+        // HF0006 - expiration date exceeded – the provided card is expired
+        // HF0007 – internal error – if the issue persists the payment has to be restarted
+        // HF0009 – 3DS GDI verification failed – the payment experience has to be stopped with failure.
+      },
+      onConfirmError: function (evtData) {
+        // this event is returned as a consequence of the invocation of confirmData() SDK function.
+        // the possible cases are:
+        // HF0002 – temporary unavailability of the service
+        // HF0003 - session expired – the payment experience shall be restarted from the post orders/build
+        // HF0007 – internal error – if the issue persists the payment has to be restarted
+        console.debug('onConfirmError: %s', JSON.stringify(evtData))
+        alert('onConfirmError')
+        enableBtn();
+      },
+      onBuildFlowStateChange: function (evtData, state) {
+        // this event is returned for each state transition. The possible values are READY_FOR_PAYMENT and PAYMENT_COMPLETE,
+        // described in the following paragraphs.
+        console.debug('onBuildFlowStateChange: %s', JSON.stringify(evtData))
+        alert('onBuildFlowStateChange')
+        enableBtn();
+      },
+      onAllFieldsLoaded: function () {
+        console.log('All fields loaded');
+      },
+      cssLink: "https://vyach-g.github.io/teststyles/styles.css",
+      defaultComponentCssClassName: "defaultComponentStyle",
+      defaultContainerCssClassName: "defaultContainerStyle"
+      // see the paragraph Graphic Changes to Credit Card Data Collection Form (CSS)
+    });
+    // setTimeout(() => {
+    //   console.log(build)
+
+    // }, 2000);
+    // setTimeout(() => {
+
+    //   build.eventListener({ origin: 'https://xpaysandbox.nexigroup.com', data: { event: 'READY' } })
+    //   build.addCss("https://nexi.libersave.com/xpay.css")
+    //   console.log(build)
+    // }, 2000);
+
+
+
+  </script>
+
+  <script>
+    function confirm() {
+      build.confirmData(myLoader);
+    }
+
+    function disableBtn() {
+      document.getElementById('confirm').disabled = 'disabled'
+    }
+
+    function enableBtn() {
+      document.getElementById('confirm').disabled = null
+    }
+
+    function myLoader() {
+      disableBtn();
+      console.debug('confirming...')
+    }
+
+    function renderForm() {
+      const form = document.getElementById('form');
+      form.innerHTML = '';
+
+      const data = {
+        "event": "BUILD_FLOW_STATE_CHANGE",
+        "fieldSet": {
+          "fields": [
+            {
+              "class": "CARD_FIELD",
+              "id": "CARD_NUMBER",
+              "src": "https://xpaysandbox.nexigroup.com/phoenix-0.0/iframe.html?id=CARD_NUMBER&lang=ENG&correlationid=2608b361-bfde-4356-be3e-38bc4dd6a862&sessionid=516ecaa0-ffcf-4b84-bdf0-700883a48f69&placeholder=Y",
+              "type": "TEXT"
+            },
+            {
+              "class": "CARD_FIELD",
+              "id": "EXPIRATION_DATE",
+              "src": "https://xpaysandbox.nexigroup.com/phoenix-0.0/iframe.html?id=EXPIRATION_DATE&lang=ENG&correlationid=2608b361-bfde-4356-be3e-38bc4dd6a862&sessionid=516ecaa0-ffcf-4b84-bdf0-700883a48f69&placeholder=Y",
+              "type": "TEXT"
+            },
+            {
+              "class": "CARD_FIELD",
+              "id": "SECURITY_CODE",
+              "src": "https://xpaysandbox.nexigroup.com/phoenix-0.0/iframe.html?id=SECURITY_CODE&lang=ENG&correlationid=2608b361-bfde-4356-be3e-38bc4dd6a862&sessionid=516ecaa0-ffcf-4b84-bdf0-700883a48f69&placeholder=Y",
+              "type": "TEXT"
+            },
+            {
+              "class": "CARD_FIELD",
+              "id": "CARDHOLDER_NAME",
+              "src": "https://xpaysandbox.nexigroup.com/phoenix-0.0/iframe.html?id=CARDHOLDER_NAME&lang=ENG&correlationid=2608b361-bfde-4356-be3e-38bc4dd6a862&sessionid=516ecaa0-ffcf-4b84-bdf0-700883a48f69&placeholder=Y",
+              "type": "TEXT"
+            },
+            {
+              "class": "CARD_FIELD",
+              "id": "CARDHOLDER_EMAIL",
+              "src": "https://xpaysandbox.nexigroup.com/phoenix-0.0/iframe.html?id=CARDHOLDER_EMAIL&lang=ENG&correlationid=2608b361-bfde-4356-be3e-38bc4dd6a862&sessionid=516ecaa0-ffcf-4b84-bdf0-700883a48f69&placeholder=Y",
+              "type": "TEXT"
+            }
+          ],
+          "sessionId": "516ecaa0-ffcf-4b84-bdf0-700883a48f69"
+        },
+        "state": "CARD_DATA_COLLECTION"
+      }
+
+      data.fieldSet.fields.map((fieldData) => {
+        const iframe = document.createElement('iframe');
+        iframe.src = fieldData.src;
+        iframe.id = fieldData.id;
+        iframe.className = fieldData.class;
+        iframe.width = '100%'
+        iframe.height = '50px'
+        form.appendChild(iframe)
+      })
+    }
+
+    renderForm();
+  </script>
+
+  <script>
+    // setTimeout(() => {
+
+    //   const iframe = document.getElementById('CARD_NUMBER');
+    //   const message = 'Hello from the main page!';
+
+    //   // Отправка сообщения в iframe
+    //   iframe.contentWindow.postMessage(message, 'https://xpaysandbox.nexigroup.com');
+
+    //   // document.querySelector('iframe').contentWindow.postMessage({ event: 'addCss', cssLink: 'https://nexi.libersave.com/xpay.css' }, 'https://xpaysandbox.nexigroup.com');
+    //   console.log('sent')
+    // }, 6000);
+  </script>
+</body>
+
+</html>
